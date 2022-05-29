@@ -1,3 +1,13 @@
+//Classe che interroga i motori di ricerca google e yahoo con il nome di una città. Restituisce un vettore contenente i link dei siti trovati che contengono le 
+//info meteo.
+
+//es.
+//input (citta2):pergine
+//output:
+//googlefirst3[0]=https://www.3bmeteo.com/meteo/pergine+valsugana
+//googlefirst3[1]=https://www.ilmeteo.it/meteo/Pergine+Valsugana
+//....
+
 package tri.meteo.trimeteo2;
 
 import org.jsoup.Jsoup;
@@ -17,6 +27,7 @@ public class getRESULTS {
         String[] pp =new String[60];
 
         try {
+        //"document" contiene tutto il codice html del link "googlefirst + googlefirst2"
             Document document = Jsoup.connect(googlefirst + googlefirst2).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11 Firefox/19.0").timeout(0).get();
             Elements temp = document.select("div.rc");
 
@@ -24,11 +35,13 @@ public class getRESULTS {
             for (Element movielist : temp) {
                 i++;
                 //alertDialog.setMessage(i + " " + movielist.getElementsByTag("div").first().text());
+                //manipolazione del codice html per ottenere solo i link di interesse
                 pp[i] = (movielist.getElementsByTag("div").html());
                 if(i>58){break;}
 
 
                 if (pp[i] != null) {
+                //Costruzione array di output "googlefirst3"
                     googlefirst3 = pp[i];
                     googlefirst3 = String.valueOf(googlefirst3).replace(' ', '_');
                     googlefirst3 = googlefirst3.replace("\n", "").replace("\r", "");
