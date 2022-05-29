@@ -1,0 +1,93 @@
+package tri.meteo.trimeteo2;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+
+//RICEVE VETTORE CON CODICE HTML E TROVA FRAMMENTI DI TESTO
+public class getRESULTS {
+    public static String goog (String citta2,String first2,String first4,String contains)
+    {
+        String googlefirst = "https://www.google.com/search?q=";
+        String googlefirst2 = first2+citta2+first4;
+        String googlefirst3 = "";
+        String[] pp =new String[60];
+
+        try {
+            Document document = Jsoup.connect(googlefirst + googlefirst2).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11 Firefox/19.0").timeout(0).get();
+            Elements temp = document.select("div.rc");
+
+            int i = 0;
+            for (Element movielist : temp) {
+                i++;
+                //alertDialog.setMessage(i + " " + movielist.getElementsByTag("div").first().text());
+                pp[i] = (movielist.getElementsByTag("div").html());
+                if(i>58){break;}
+
+
+                if (pp[i] != null) {
+                    googlefirst3 = pp[i];
+                    googlefirst3 = String.valueOf(googlefirst3).replace(' ', '_');
+                    googlefirst3 = googlefirst3.replace("\n", "").replace("\r", "");
+                    String[] URLarray = googlefirst3.split("\"");
+                    if (URLarray.length > 3) {
+                        googlefirst3 = URLarray[3];
+                        if (pp[i].contains(contains)) {break;}
+                    }
+                }}
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return googlefirst3;
+    }
+
+
+
+
+
+    //BING
+
+
+    public static String bing (String citta2,String first2,String first4,String contains)
+    {
+
+        //https://it.search.yahoo.com/search?p=ilmeteo+magenta&fr=yfp-t&fp=1&toggle=1&cop=mss&ei=UTF-8
+        //https://www.bing.com/search?q=ilmeteo+magenta
+        String googlefirst = "https://www.bing.com/search?q=";
+        String googlefirst2 = first2.replace("%20","+")+citta2+first4.replace("%20","+");
+        String googlefirst3 = "";
+        String[] pp =new String[60];
+
+        try {
+            Document document = Jsoup.connect(googlefirst + googlefirst2 ).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11 Firefox/19.0").timeout(0).get();
+            Elements temp = document.select("li.b_algo");
+
+            int i = 0;
+            for (Element movielist : temp) {
+                i++;
+                //alertDialog.setMessage(i + " " + movielist.getElementsByTag("div").first().text());
+                Elements tempo = (movielist.getElementsByTag("a"));
+                if(tempo.size()>0){pp[i] = tempo.get(0).attr("href");}
+
+                if(i>58){break;}
+
+
+                if (pp[i] != null) {
+                    googlefirst3 = pp[i];
+                     if (pp[i].contains(contains)) {break;}
+                }}
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return googlefirst3;
+    }
+
+
+}
